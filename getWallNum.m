@@ -1,6 +1,9 @@
 function [ wallNum ] = getWallNum( x1,x2,k,D )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+
+if k>360
+    k=k-360;
+end
+
 switch k
     case 0
         wallNum=3;
@@ -33,25 +36,25 @@ switch k
                 
         
         elseif k>180 && k<270
-            m=tand(90-(k-180));
-            if m<x2/x1
-                wallNum=2;
-            else
+            m=tand(90+(360-k));
+            if m>x2/x1
                 wallNum=1;
+            else
+                wallNum=2;
             end
 
                 
         else
             m=tand(90+(360-k));
-            if m<(D(2)-x2)/(-x1)
-                wallNum=3;
-            else
+            if m>(D(2)-x2)/(-x1)
                 wallNum=2;
+            else
+                wallNum=3;
             end          
                
        
         
-    end
+       end
     
    
 end  
