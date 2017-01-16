@@ -29,6 +29,11 @@ k=0;          % course as a constant
            %360-atand(x_real/(length_y-y_real)),
 meas_angles=[atand((width_x-x_real)/(length_y-y_real)),360-atand(x_real/(length_y-y_real)),180-atand((width_x-x_real)/y_real),180+atand(x_real/y_real)];%,90,160,80,269,200,310];     % measurements angels
 m=length(meas_angles);
+anglemodel=cell(1,m);
+anglemodel{1}=@(xx,yy)atand((width_x-xx)/(length_y-yy));
+anglemodel{2}=@(xx,yy)360-atand(xx/(length_y-yy));
+anglemodel{3}=@(xx,yy)180-atand((width_x-xx)/yy);
+anglemodel{4}=@(xx,yy)180+atand(xx/yy);
 
 real_range=[];
 % real_range(:)=getRange(x_real,y_real,k+meas_angles(:),getWallNum(x_real,y_real,k+meas_angles(:),[width_x;length_y]),[width_x;length_y]);
@@ -67,7 +72,7 @@ for ii=1:m
 
 for i=1:samples
                  
-                sx=getRange_(samplePoints(1,i),samplePoints(2,i),k+meas_angles(ii),getWallNum(samplePoints(1,i),samplePoints(2,i),k+meas_angles(ii),[width_x;length_y]),[width_x;length_y]);
+                sx=getRange_(samplePoints(1,i),samplePoints(2,i),anglemodel{ii}(samplePoints(1,i),samplePoints(2,i)),getWallNum(samplePoints(1,i),samplePoints(2,i),anglemodel{ii}(samplePoints(1,i),samplePoints(2,i)),[width_x;length_y]),[width_x;length_y]);
 %                               
 %                
                 maxliklehood_values(i)=Maximum_Likelihood_calculation_for_LRF(Y(ii),sx,R(ii,ii));
