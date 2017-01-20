@@ -1,0 +1,13 @@
+
+% problem number 4
+
+function darwCircle(x,y,r)
+ang=0:0.01:2*pi; 
+xp=r*cos(ang);
+yp=r*sin(ang);
+plot(x+xp,y+yp);
+axis equal
+end
+
+
+cdf_=

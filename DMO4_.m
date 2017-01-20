@@ -49,7 +49,7 @@ R1=R^(-1);
 
 
 % Sd=sqrt(0.7*r1^2); 
-Sd=0.25;
+Sd=0;
 
 % modeling systematic for samples and realizations
 C1d=Sd*rand(1,j1); %samples
@@ -126,6 +126,7 @@ posterior(1,:)=1/j1;
 P=zeros(2,2,4,L);
 
 sigma2=zeros(2,4,L);
+figure
 for l=1:L %range for every realization
 
 
@@ -184,11 +185,15 @@ for l=1:L %range for every realization
                [out]=ResamplingFast(j1,j1,posterior(k+1,:),xj);
                xj(1,:)=out(1,:);
                xj(2,:)=out(2,:);
-               xj1=xj(1,:);
-               xj2=xj(2,:);
+               xj1=out(1,:);
+               xj2=out(2,:);
 
          
   end 
+  plot( xj1,xj2,'.r');
+  xlim([0 width_x])
+  ylim([0 length_y])
+  drawnow();
 
   sigma2(:,:,l)=(X(:,:,l)-repmat([x(1,l);x(2,l)],1,4));
 end

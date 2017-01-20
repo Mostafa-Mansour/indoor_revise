@@ -27,13 +27,17 @@ samplePoints=repmat([a;a],1,samples)+repmat([(width_x-2*a);(length_y-2*a)],1,sam
 k=0;          % course as a constant   
            % number of measurements
            %360-atand(x_real/(length_y-y_real)),
-meas_angles=[atand((width_x-x_real)/(length_y-y_real)),360-atand(x_real/(length_y-y_real)),180-atand((width_x-x_real)/y_real),180+atand(x_real/y_real)];%,90,160,80,269,200,310];     % measurements angels
+meas_angles=[atand((width_x-x_real)/(length_y-y_real)),360-atand(x_real/(length_y-y_real)),180-atand((width_x-x_real)/y_real),180+atand(x_real/y_real)];%,0,90,180,270];%,90,160,80,269,200,310];     % measurements angels
 m=length(meas_angles);
 anglemodel=cell(1,m);
 anglemodel{1}=@(xx,yy)atand((width_x-xx)/(length_y-yy));
 anglemodel{2}=@(xx,yy)360-atand(xx/(length_y-yy));
 anglemodel{3}=@(xx,yy)180-atand((width_x-xx)/yy);
 anglemodel{4}=@(xx,yy)180+atand(xx/yy);
+% anglemodel{5}=@(xx,yy)0;
+% anglemodel{6}=@(xx,yy)90;
+% anglemodel{7}=@(xx,yy)180;
+% anglemodel{8}=@(xx,yy)270;
 
 real_range=[];
 % real_range(:)=getRange(x_real,y_real,k+meas_angles(:),getWallNum(x_real,y_real,k+meas_angles(:),[width_x;length_y]),[width_x;length_y]);
@@ -70,7 +74,7 @@ figure
 for ii=1:m
 %     start=clock;
 
-for i=1:samples
+parfor i=1:samples
                  
                 sx=getRange_(samplePoints(1,i),samplePoints(2,i),anglemodel{ii}(samplePoints(1,i),samplePoints(2,i)),getWallNum(samplePoints(1,i),samplePoints(2,i),anglemodel{ii}(samplePoints(1,i),samplePoints(2,i)),[width_x;length_y]),[width_x;length_y]);
 %                               

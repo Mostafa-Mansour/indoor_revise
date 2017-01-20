@@ -1,7 +1,6 @@
-rand('state',0);randn('state',0);
 
-m=4;
-realizations=1000;
+m=8;
+realizations=100;
 X=zeros(2,m,realizations);
 P=zeros(2,2,m,realizations);
 samples=30000;
@@ -20,22 +19,22 @@ end
 
 sigma=sqrt(sum(sigma2.^2,3)./(realizations-1));
 P__=sum(P,4)./realizations;
-figure (7)
-subplot(233)
+figure
+subplot(231)
 hold on
 plot(linspace(1,m,m),sigma(1,:),'r',linspace(1,m,m),sqrt(squeeze(P__(1,1,:))),'b');
-subplot(236)
+subplot(232)
 hold on
 plot(linspace(1,m,m),sigma(2,:),'r',linspace(1,m,m),sqrt(squeeze(P__(2,2,:))),'b');
 
-figure(4) 
+figure 
 hold on
-subplot(232)
+subplot(231)
 plot(linspace(1,m,m),abs(sigma(1,:)'-sqrt(squeeze(P__(1,1,:)))),'b');%,'r',linspace(1,m,m),sqrt(squeeze(P__(1,1,:))),'b');
 grid on,
 xlabel('Number of Meaurements')
 ylabel('Difference')
-subplot(235)
+subplot(234)
 plot(linspace(1,m,m),abs(sigma(2,:)'-sqrt(squeeze(P__(2,2,:)))),'b');
 grid on,
 xlabel('Number of Meaurements')

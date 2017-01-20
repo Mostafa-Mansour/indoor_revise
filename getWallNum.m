@@ -12,7 +12,7 @@ switch k
     case 180
         wallNum=1;
     case 270
-       wallNum=1;
+       wallNum=2;
     case 360
         wallNum=3;
     otherwise
