@@ -1,13 +1,13 @@
 rand('state',0);randn('state',0);
 
 m=4;
-realizations=1000;
+realizations=100;
 X=zeros(2,m,realizations);
 P=zeros(2,2,m,realizations);
 samples=30000;
 a=0.25;
-width_x=5;
-length_y=5;
+width_x=3;
+length_y=3;
 x_real=repmat(a,1,realizations)+repmat((width_x-2*a),1,realizations).*rand(1,realizations);
 y_real=repmat(a,1,realizations)+repmat((length_y-2*a),1,realizations).*rand(1,realizations);
 sigma2=zeros(2,m,realizations);

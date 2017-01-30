@@ -53,11 +53,11 @@ end
 % ranges to the center of the walls
 centerRange=@(xx,yy,X,Y) sqrt((X-xx)^2+(Y-yy)^2);
 
-% real_range=[real_range,...
-%     centerRange(x_real,y_real,width_x,length_y/2),...
-%     centerRange(x_real,y_real,width_x/2,0)];%,...
-    %centerRange(x_real,y_real,0,length_y/2),...
-    %centerRange(x_real,y_real,width_x/2,length_y)];
+real_range=[real_range,...
+    centerRange(x_real,y_real,width_x,length_y/2),...
+    centerRange(x_real,y_real,width_x/2,0),...
+    centerRange(x_real,y_real,0,length_y/2),...
+    centerRange(x_real,y_real,width_x/2,length_y)];
 
 
 
@@ -120,9 +120,9 @@ end
                P(:,:,ii)=sum(cov__,3)-[X(1,ii);X(2,ii)]*[X(1,ii),X(2,ii)];
                   
                 %% Resampling %%%
-%                [out]=ResamplingFast(samples,samples,posterior(ii+1,:),samplePoints);
-%                samplePoints(1,:)=out(1,:);
-%                samplePoints(2,:)=out(2,:);
+               [out]=ResamplingFast(samples,samples,posterior(ii+1,:),samplePoints);
+               samplePoints(1,:)=out(1,:);
+               samplePoints(2,:)=out(2,:);
               
 %               else
 %                   %%% State Vector Estimation %%%
