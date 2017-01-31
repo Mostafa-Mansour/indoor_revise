@@ -1,0 +1,83 @@
+function [ X,P ] = perceivingLandmarks( x_real,y_real,samples,width_x,length_y )
+
+
+% set seeding
+randn('state',0); rand('state',0);
+
+%Motion model
+model_f=@(x)x; %stationary mobile robot
+
+%sesnor model
+model_h=@(x,landmark) sqrt((landmark(1)-x(1))^2+(landmark(2)-x(2))^2);
+
+%% Prior uniform distribution %%
+a=0.25;
+%%%%%%%%samples  %%%%%%%%%%%%%%%
+samplePoints=repmat([a;a],1,samples)+repmat([(width_x-2*a);(length_y-2*a)],1,samples).*rand(2,samples);
+xx=samplePoints(1,:);yy=samplePoints(2,:);
+
+%% measurment modeling %%
+% 8 measurements, 4 to every corner and 4 to the centers of the walls
+
+landmarks=[width_x   width_x     0       0               width_x       width_x/2   0             width_x/2;
+         length_y   0           0       length_y        length_y/2    0           length_y/2    length_y];
+
+y=[];
+rms_noise=0.05;
+for n=1:length(landmarks)
+    y(n)=model_h([x_real;y_real],landmarks(:,n))+rms_noise*randn();
+
+end
+
+%% Arrays for the results
+X=zeros(2,length(landmarks));
+P=zeros(2,2,length(landmarks));
+
+%% Prior distibution 
+prior=ones(1,samples);
+prior=prior./samples;
+
+%%Array for posterior distribution
+posterior=zeros(length(landmarks)+1,samples);
+posterior(1,:)=prior;
+maxliklehood_values=zeros(1,samples);
+cov__=zeros(2,2,samples);
+
+%% loop for particle filter
+figure
+for n=1:length(landmarks) % loop for every meausrement (every land mark)
+   for i=1:samples % loop for every particle
+      sxi=model_h([xx(i),yy(i)],landmarks(:,n));
+      maxliklehood_values(i)=Maximum_Likelihood_calculation_for_LRF(y(n),sxi,rms_noise^2);
+      cov__(:,:,i)=[xx(i);yy(i)]*[xx(i);yy(i)]';
+       
+   end
+   
+   %% normalization
+   posterior(n+1,:)=(maxliklehood_values.*posterior(n,:))./sum((maxliklehood_values.*posterior(n,:)));
+    
+   %% State vector Estimation %%
+   X(1,n)=sum(xx.*posterior(n+1,:));
+   X(2,n)=sum(yy.*posterior(n+1,:));
+   
+   %% Covariance Matrix
+   for kk=1:samples
+          cov__(:,:,kk)=posterior(n+1,kk).*cov__(:,:,kk);
+                                    
+   end               
+   P(:,:,n)=sum(cov__,3)-[X(1,n);X(2,n)]*[X(1,n),X(2,n)];
+   
+  %% Resampling %%%
+  [out]=ResamplingFast(samples,samples,posterior(n+1,:),[xx;yy]);
+  xx=out(1,:);
+  yy=out(2,:);
+  
+  %% Display results
+  disp(['measurement  is ' num2str(n)]);
+  plot(xx,yy,'.r');
+  xlim([0 width_x])
+  ylim([0 length_y])
+  drawnow();
+   
+end
+end
