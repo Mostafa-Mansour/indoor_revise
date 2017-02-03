@@ -1,5 +1,28 @@
-function [ X,P ] = perceivingLandmarks( x_real,y_real,samples,width_x,length_y )
+function piche_like_perceivingLandmarks
 
+% Simulation and estimation of a nonlinear robot pose estimation problem
+% There are some differences from the textbook model (Examples 5.3,7.1,7.2):
+
+%% Define simulation parameters
+lx=3;               % room width
+ly=3;               % room length
+r=0.25;             % measurement variance
+x0=[lx/2;ly/2;0];   % initial state (x,y coordinates and heading)
+DT=1;               % time step size
+nk=500;             % number of steps
+%mskip= 0;           % number of time steps per measurement
+
+noise= makedist('Normal','sigma',sqrt(r));
+
+simTitle='robot pose estimation';
+
+%% Simulations 
+for isim=1:length(noise)
+    disp(['Simulation ',num2str(isim)])
+    rng('default'); rng(0)      % random number generator's starting value
+    
+    %% Track
+    
 
 % set seeding
 % randn('state',0); rand('state',0);
