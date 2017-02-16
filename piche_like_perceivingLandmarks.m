@@ -1,19 +1,52 @@
 function piche_like_perceivingLandmarks
 
+close all
+clear all
 % Simulation and estimation of a nonlinear robot pose estimation problem
 % There are some differences from the textbook model (Examples 5.3,7.1,7.2):
 
 %% Define simulation parameters
-lx=3;               % room width
-ly=3;               % room length
+lx=5;               % room width
+ly=5;               % room length
 r=0.25;             % measurement variance
 x0=[lx/2;ly/2;0];   % initial state (x,y coordinates and heading)
 DT=1;               % time step size
 nk=500;             % number of steps
 %mskip= 0;           % number of time steps per measurement
 
-noise= makedist('Normal','sigma',sqrt(r));
+%% Define Landmarks
 
+lmarks=[lx   lx     0       0;
+           ly   0      0       ly];
+       
+X=zeros(2,nk);
+figure(1)
+% hold on 
+grid on;
+plot(lmarks(1,:),lmarks(2,:),'*','linewidth',20);
+
+%% Measurement modeling 
+x0=2;y0=1;
+getRange=@(x,y) sqrt((lmarks(1,:)-x).^2 +(lmarks(2,:)-y).^2);
+
+for t=1:nk
+x=x0;y=y0;
+x=x+randn();    y=y+randn();
+realRange=getRange(x,y);
+X(:,t)=[x;y];
+plot(lmarks(1,:),lmarks(2,:),'*','linewidth',20);
+hold on
+plot([x lmarks(1,1)],[y lmarks(2,1)],'k--',[x lmarks(1,2)],[y lmarks(2,2)],'k--',...
+     [x lmarks(1,3)],[y lmarks(2,3)],'k--',[x lmarks(1,4)],[y lmarks(2,4)],'k--');
+ drawnow();
+hold off
+%  fprintf('Please press Enter \n');
+ pause(0.5);
+end
+
+
+noise= makedist('Normal','sigma',sqrt(r));
+plot
 simTitle='robot pose estimation';
 
 %% Simulations 

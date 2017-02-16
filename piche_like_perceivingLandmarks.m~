@@ -1,5 +1,7 @@
 function piche_like_perceivingLandmarks
 
+close all
+clear all
 % Simulation and estimation of a nonlinear robot pose estimation problem
 % There are some differences from the textbook model (Examples 5.3,7.1,7.2):
 
@@ -12,15 +14,45 @@ DT=1;               % time step size
 nk=500;             % number of steps
 %mskip= 0;           % number of time steps per measurement
 
-noise= makedist('Normal','sigma',sqrt(r));
+%% Define Landmarks
 
+lmarks=[lx   lx     0       0;
+           ly   0      0       ly];
+       
+X=(2,
+figure(1)
+% hold on 
+grid on;
+plot(lmarks(1,:),lmarks(2,:),'*','linewidth',20);
+
+%% Measurement modeling 
+x0=2;y0=1;
+getRange=@(x,y) sqrt((lmarks(1,:)-x).^2 +(lmarks(2,:)-y).^2);
+
+for t=1:0.01:100
+realRange=getRange(x0,y0);
+x=x0;y=y0;
+x=x+randn();    y=y+randn();
+plot(lmarks(1,:),lmarks(2,:),'*','linewidth',20);
+hold on
+plot([x lmarks(1,1)],[y lmarks(2,1)],'k--',[x lmarks(1,2)],[y lmarks(2,2)],'k--',...
+     [x lmarks(1,3)],[y lmarks(2,3)],'k--',[x lmarks(1,4)],[y lmarks(2,4)],'k--');
+ drawnow();
+hold off
+ fprintf('Please press Enter \n');
+ pause;
+end
+noise= makedist('Normal','sigma',sqrt(r));
+plot
 simTitle='robot pose estimation';
 
 %% Simulations 
 for isim=1:length(noise)
     disp(['Simulation ',num2str(isim)])
     rng('default'); rng(0)      % random number generator's starting value
-
+    
+    %% Track
+    
 
 % set seeding
 % randn('state',0); rand('state',0);
